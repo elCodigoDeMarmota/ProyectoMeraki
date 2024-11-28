@@ -109,8 +109,8 @@
                     </asp:Menu>
             </td>
             <td style="background-color: #1A1A1A; padding: 10px; text-align: right;">
-            <asp:Button ID="btnCrearCuenta" runat="server" Text="Crear cuenta" CssClass="boton" />
-            <asp:Button ID="btnIniciarSesion" runat="server" Text="Iniciar sesión" CssClass="boton" />
+            <asp:Button ID="btnCrearCuenta" runat="server" Text="Crear cuenta" CssClass="boton" CausesValidation="false" OnClick="btnCrearCuenta_Click" />
+                <asp:Button ID="btnIniciarSesion" runat="server" Text="Iniciar sesión" CssClass="boton" CausesValidation="false" OnClick="btnIniciarSesion_Click" />
     </td>
         </tr>
     </table>

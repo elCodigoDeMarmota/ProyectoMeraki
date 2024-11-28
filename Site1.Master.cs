@@ -14,5 +14,15 @@ namespace Meraki
             //lblUsuario.Text = Session["NombreUsuario"].ToString();/*Variable de session*/
             //lblRol.Text = Session["Rol"].ToString();
         }
+
+        protected void btnIniciarSesion_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/Login.aspx");
+        }
+
+        protected void btnCrearCuenta_Click(object sender, EventArgs e)
+        {
+            Response.Redirect("~/CrearCuenta.aspx"); // Cambia la ruta según la ubicación de tu página de creación de cuenta
+        }
     }
 }

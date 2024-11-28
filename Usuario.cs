@@ -30,7 +30,7 @@ namespace Meraki
             }
         }
 
-        public void CrearCuenta(string Nombre, string Apellidos, DateTime Fecha_Nacimiento, int RUN, string DV,  string Correo, string Contraseña)
+        public void CrearCuenta(string Nombre, string Apellidos, DateTime Fecha_Nacimiento, int RUN, string DV, string Correo, string Contraseña)
         {
             try
             {
@@ -84,6 +84,37 @@ namespace Meraki
 
             return dv.ToUpper() == dvCalculado;
         }
+
+        public bool UsuarioExistente(int RUN, string DV)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(conexion))
+                {
+                    conn.Open();
+                    // Aquí debes llamar al procedimiento almacenado
+                    using (SqlCommand cmd = new SqlCommand("UsuarioExistente", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure; // Indica que es un procedimiento almacenado
+
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("@RUN", RUN);
+                        cmd.Parameters.AddWithValue("@DV", DV);
+
+                        // Ejecuta el procedimiento y obtiene el resultado
+                        int usuarioExistente = (int)cmd.ExecuteScalar();
+                        return usuarioExistente > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo del error
+                throw new Exception("Error al verificar si el usuario existe: " + ex.Message);
+            }
+        }
+
+
 
     }
 }
