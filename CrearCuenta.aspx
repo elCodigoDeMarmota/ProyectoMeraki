@@ -44,7 +44,6 @@
             max-width: 850px; /* Ancho máximo del contenedor */
             margin: 20px auto; /* Centra el contenedor horizontal y verticalmente */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra suave */
-            
         }
     
         h1 {

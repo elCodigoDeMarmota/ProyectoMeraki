@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.Sql;
 using System.Web.Configuration;
 using System.Data.SqlClient;
+using System.Web.UI;
 
 namespace Meraki
 {
@@ -92,7 +93,7 @@ namespace Meraki
                 using (SqlConnection conn = new SqlConnection(conexion))
                 {
                     conn.Open();
-                    // Aquí debes llamar al procedimiento almacenado
+
                     using (SqlCommand cmd = new SqlCommand("UsuarioExistente", conn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure; // Indica que es un procedimiento almacenado
@@ -115,6 +116,48 @@ namespace Meraki
         }
 
 
+
+        public DataTable Autentificación(string USUARIO, string CONTRASEÑA)
+        {
+            SqlDataReader dr = null;
+            DataTable dt = new DataTable();
+            try
+            {
+                #region Paso 1: Abrir Conecion
+                SqlConnection conn = new SqlConnection(conexion);
+                conn.Open(); // Abrir conexión
+                #endregion
+                #region Paso 2: Llamar al procedimiento
+                SqlCommand cmd = new SqlCommand("autentificacion", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                #endregion
+                #region Paso 3: Pasar parametros
+                cmd.Parameters.Add("@USUARIO", SqlDbType.VarChar, 60);
+                cmd.Parameters["@USUARIO"].Value = USUARIO;
+
+                cmd.Parameters.Add("@CONTRASEÑA", SqlDbType.VarChar, 60);
+                cmd.Parameters["@CONTRASEÑA"].Value = CONTRASEÑA;
+                #endregion
+                #region Paso 4: Ejecuto el prodecimiento
+                dr = cmd.ExecuteReader();
+                dt.Load(dr);
+                #endregion
+
+                #region cierro conexion y dr
+                dr.Close();
+                conn.Close();
+                #endregion
+                return dt;
+
+
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores
+                throw new Exception("Error al autenticar el usuario: " + ex.Message);
+            }
+
+        }
 
     }
 }

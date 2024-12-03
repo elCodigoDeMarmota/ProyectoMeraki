@@ -30,13 +30,11 @@ namespace Meraki
         {
             try
             {
-                // Verifica si las validaciones del cliente son válidas
                 if (!Page.IsValid)
                 {
-                    return; // Si hay errores en los campos requeridos, detén la ejecución
+                    return; 
                 }
 
-                // Captura los valores de los controles del formulario
                 string Nombre = txtNombre_.Text.Trim();
                 string Apellidos = txtApellidos.Text.Trim();
                 DateTime Fecha_Nacimiento = DateTime.Parse(txtFechaNacimiento.Text.Trim());
@@ -45,45 +43,41 @@ namespace Meraki
                 string Correo = txtCorreo.Text.Trim();
                 string Contraseña = txtContraseña.Text.Trim();
 
-                // Validar contraseñas
                 if (Contraseña != txtConfirmaContraseña.Text.Trim())
                 {
                     lblMensajeError2.Text = "Las contraseñas no coinciden.";
-                    lblMensajeError2.CssClass = "mensajeError"; // Hace visible el mensaje
-                    lblMensajeError2.Style["visibility"] = "visible"; // Mostrar el mensaje
-                    lblMensajeError2.Style["display"] = "block"; // Asegúrate de que se vea
+                    lblMensajeError2.CssClass = "mensajeError"; 
+                    lblMensajeError2.Style["visibility"] = "visible"; 
+                    lblMensajeError2.Style["display"] = "block"; 
 
-                    return; // Detiene la ejecución si las contraseñas no coinciden
+                    return; 
                 }
 
                 Usuario usuario = new Usuario();
                 if (usuario.UsuarioExistente(RUN, DV))
                 {
                     lblMensajeError2.Text = "El usuario ya está registrado.";
-                    lblMensajeError2.CssClass = "mensajeError"; // Hace visible el mensaje
-                    lblMensajeError2.Style["visibility"] = "visible"; // Mostrar el mensaje
-                    lblMensajeError2.Style["display"] = "block"; // Asegúrate de que se vea
-
-                    return; // Detiene la ejecución si el usuario ya existe
+                    lblMensajeError2.CssClass = "mensajeError"; 
+                    lblMensajeError2.Style["visibility"] = "visible"; 
+                    lblMensajeError2.Style["display"] = "block"; 
+                    return; 
                 }
 
-                // Validar RUN
+             
                 if (!usuario.ValidarRun(RUN, DV))
                 {
                     lblMensajeError2.Text = "El RUN ingresado no es válido.";
-                    lblMensajeError2.CssClass = "mensajeError"; // Hace visible el mensaje
+                    lblMensajeError2.CssClass = "mensajeError"; 
                     lblMensajeError2.Style["visibility"] = "visible"; // Mostrar el mensaje
                     lblMensajeError2.Style["display"] = "block"; // Asegúrate de que se vea
 
-                    return; // Detiene la ejecución si el RUN no es válido
+                    return; 
                 }
 
-                // Crear cuenta si todas las validaciones son correctas
                 usuario.CrearCuenta(Nombre, Apellidos, Fecha_Nacimiento, RUN, DV, Correo, Contraseña);
 
                 LimpiarFormulario();
 
-                // Mostrar mensaje de éxito
                 lblMensajeExito2.Text = "Cuenta creada exitosamente.";
                 lblMensajeExito2.CssClass = "mensajeExito";
                 lblMensajeExito2.Style["visibility"] = "visible"; // Mostrar el mensaje
@@ -92,7 +86,6 @@ namespace Meraki
             }
             catch (Exception ex)
             {
-                // Manejo de errores
                 lblMensajeError2.Text = "Ocurrió un error: " + ex.Message;
                 lblMensajeError2.CssClass = "mensajeError";
             }

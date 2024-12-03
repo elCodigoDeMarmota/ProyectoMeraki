@@ -128,9 +128,46 @@
             visibility: hidden; /* Esconde los mensajes por defecto */
         }
 
-.mensajeError.visible 
+        .mensajeError.visible 
         {
             visibility: visible; /* Hace visible el mensaje cuando hay error */
+        }
+
+        .mensajeTexto 
+        {
+            color: black; 
+            font-weight: bold; 
+            font-size: 1.2rem; 
+            margin-top: 10px; 
+            display: block; 
+            text-align: center; 
+        }
+
+        .mensajeExito 
+        {
+        min-height: 20px; /* Reserva espacio */
+        width: 300px; /* Asegura un ancho uniforme */
+        display: inline-block; /* Mantiene el espacio aunque esté vacío */
+        margin-top: 5px;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        border-radius: 5px;
+        margin: 0 auto;
+        }
+
+        .mensajeExito 
+        {
+        visibility: hidden;  
+        background-color: #e6ffe6;
+        color: green;
+        padding: 5px;
+        border: 1px solid green;
+        }
+
+        .mensajeExito.visible 
+        {
+        visibility: visible; /* Hace visible el mensaje */
         }
 </style>
 
@@ -143,17 +180,36 @@
 <div class="Contenido">
    <h1>Iniciar Sesión</h1>
 
+    <asp:Panel ID="pnlLogin" runat="server" DefaultButton="btnIniciarSesion">
     <div class="camposCrear">
         <asp:Label ID="lblUsuario" runat="server" Text="Usuario:" CssClass="labelCrear"></asp:Label>
         <asp:TextBox ID="txtUsuario" runat="server" CssClass="textboxCrear"></asp:TextBox>
+        <asp:RequiredFieldValidator 
+        ID="Req_Usuario" 
+        runat="server" 
+        ControlToValidate="txtUsuario"
+        CssClass="mensajeError"
+        ErrorMessage="Por favor ingrese su usuario.">
+    </asp:RequiredFieldValidator>
     </div>
 
     <div class="camposCrear">
         <asp:Label ID="lblContraseña" runat="server" Text="Contraseña:" CssClass="labelCrear"></asp:Label>
-        <asp:TextBox ID="txtContraseña" runat="server" CssClass="textboxCrear"></asp:TextBox>
+        <asp:TextBox ID="txtContraseña" runat="server" CssClass="textboxCrear" TextMode="Password"></asp:TextBox>
+        <asp:RequiredFieldValidator 
+        ID="Req_Contraseña" 
+        runat="server" 
+        ControlToValidate="txtContraseña"
+        CssClass="mensajeError"
+        ErrorMessage="Por favor ingrese su contraseña.">
+    </asp:RequiredFieldValidator>
     </div>
 
     <div class="DivBoton">
-        <asp:Button ID="btnIniciarSesion" runat="server" Text="Ingresar" CssClass="btnIngresar"  CausesValidation="false"  />
+        <asp:Button ID="btnIniciarSesion" runat="server" Text="Ingresar" CssClass="btnIniciarSesion" CausesValidation="false" OnClick="btnIniciarSesion_Click" />
     </div>
+    </asp:Panel>
+    <asp:Label ID="lblMensajeExito2" runat="server"  CssClass="mensajeExito" Visible="false"></asp:Label>
+    <asp:Label ID="lblMensajeError2" runat="server" CssClass="mensajeError"  Visible="false"></asp:Label>
+</div>
 </asp:Content>
