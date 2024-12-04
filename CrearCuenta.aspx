@@ -279,7 +279,7 @@
     <asp:TextBox ID="txtDV" runat="server" CssClass="textboxDV" MaxLength="1"></asp:TextBox>
 
     <!-- CustomValidator para validar ambos campos -->
-    <asp:CustomValidator 
+    <asp:CustomValidator
         ID="CustomVal_RUN_DV" 
         runat="server" 
         CssClass="mensajeError"
