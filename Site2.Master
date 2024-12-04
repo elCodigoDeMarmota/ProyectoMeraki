@@ -1,0 +1,182 @@
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site2.master.cs" Inherits="Meraki.Site2" %>
+
+<!DOCTYPE html>
+
+<html>
+<head runat="server">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <asp:ContentPlaceHolder ID="head" runat="server">
+    </asp:ContentPlaceHolder>
+</head>
+<body>
+    <form id="form1" runat="server">
+<table style="width: 100%; border-collapse: collapse; text-align: center;">
+        <tr>
+            <td colspan="4" style="background-color: #595B5B; color: white; padding: 10px;">
+            </td>
+        </tr>
+            <tr>
+            <td style="background-color: #079ea4; padding: 10px;"> 
+                <asp:Menu ID="Menu1" runat="server" Orientation="Horizontal">
+                    <Items>
+                        <asp:MenuItem Text="Preguntas Frecuentes" NavigateUrl="~/PF" /> <%--Tenemos que agregar los links de redirección--%>
+                        <asp:MenuItem Text="Ayuda" NavigateUrl="~/Ayuda" />
+                        <asp:MenuItem Text="Soporte" NavigateUrl="~/Soporte" />
+                    </Items>
+                </asp:Menu>
+                <style>
+                    .video_contenedor 
+                    {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        overflow: hidden;
+                        z-index: -1;
+                    }
+
+                    .video_fondo 
+                    {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+
+                     body 
+                     {
+                         margin: 0;
+                         background-color: #ffffff;
+                         overflow-x: hidden;
+                     }
+
+                     .Contenido 
+                     {
+                         position: relative;
+                         z-index: 1; /* Asegura que el contenido esté por encima del video */
+                         background: white; /* Fondo blanco sólido */
+                         padding: 50px; /* Espaciado interno */
+                         border-radius: 10px; /* Bordes redondeados */
+                         max-width: 850px; /* Ancho máximo del contenedor */
+                         margin: 20px auto; /* Centra el contenedor horizontal y verticalmente */
+                         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra suave */
+     
+                     }
+                    #Menu1 a {
+                        color: white;
+                        text-decoration: none;
+                        padding: 10px 20px;
+                        display: inline-block;
+                        margin-right: 20px;
+                        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif
+
+                    }
+
+                    #Menu1 a:not(:last-child) {
+                         border-right: 20px solid #fff;
+                    }
+
+                    #Menu1 a:hover {
+                        background-color: #006f72;
+                        color: #fff;
+                    }
+
+                        #Menu2 a 
+                   {
+                        color: white;
+                        text-decoration: none;
+                        padding: 10px 20px;
+                        display: inline-block;
+                        margin-right: 40px;
+                        margin-left: 40px;
+                        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                        background-color: transparent; 
+                        transition: background-color 0.3s ease; 
+                    }
+
+                        #Menu2 a:hover 
+                    {
+                        background-color: #079ea4; 
+                        color: #fff; 
+                    }
+
+                    .boton
+                    
+                    {
+                        background-color: #079ea4; 
+                        color: white; 
+                        border: none; 
+                        border-radius: 10px; 
+                        padding: 10px 20px; 
+                        font-size: 1rem; 
+                        font-family: 'Arial', sans-serif; 
+                        cursor: pointer; 
+                        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2); 
+                        transition: background-color 0.3s ease; 
+                        text-align: center; 
+                        margin-left:5px;
+                    }
+                    
+                    .NombreUsuario
+                    {
+                       color: white;
+                       padding: 10px;
+                       display: inline-block;
+                       margin-right: 80px;
+                       font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                       background-color: transparent; 
+                       margin-left: auto; 
+                    }
+                </style>
+                <div class="video_contenedor">
+                <video class="video_fondo" autoplay muted loop>
+                <source src="Fondo_Animado.mp4" type="video/mp4" />
+                </video>
+                </div>
+
+
+            </td>
+
+            <td style="background-color: #079ea4; padding: 10px;">
+
+            </td>
+            <td style="background-color: #079ea4; padding: 10px;" colspan="2">
+
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align:left; background-color: #F7F9F9; padding: 10px;">
+               <h1> 
+                   <span style="color: #079ea4; font-family:'Lucida Handwriting', sans-serif;">Me</span><span style="color: #7d7d7d; font-family:'Lucida Handwriting'">raki</span><span style="color: #d32f2f; font-family:'Lucida Handwriting'">.cl</span>
+               </h1>
+            </td>
+            <td style="background-color: #F7F9F9; padding: 10px;"></td>
+            <td style="background-color: #F7F9F9; padding: 10px;"></td>
+        </tr>
+        <tr>
+            <td colspan="3" style="background-color: #1A1A1A; padding: 10px; display: flex; align-items: center; justify-content: space-between;"">
+                <asp:Menu ID="Menu2" runat="server" Orientation="Horizontal">
+                   <Items>
+                      <asp:MenuItem Text="Inicio" NavigateUrl="~/Inicio" /> <%--Tenemos que agregar los links de redirección--%>
+                      <asp:MenuItem Text="Mi Cuenta" NavigateUrl="~/MiCuenta" />
+                    </Items>
+                    </asp:Menu>
+                <asp:Label ID="lblUsuario" runat="server"  CssClass="NombreUsuario" ></asp:Label>
+                <asp:Button ID="btCerrarSesion" runat="server" Text="Cerrar Sesión" CssClass="boton" />
+            </td>
+                        <td style="background-color: #1A1A1A; padding: 10px;" colspan="2">
+
+            </td>
+        </tr>
+    </table>
+        <div>
+            <asp:ContentPlaceHolder ID="ContentPlaceHolder1" runat="server">
+            </asp:ContentPlaceHolder>
+        </div>
+    </form>
+</body>
+</html>

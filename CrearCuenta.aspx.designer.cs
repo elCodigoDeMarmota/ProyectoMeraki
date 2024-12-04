@@ -132,22 +132,13 @@ namespace Meraki
         protected global::System.Web.UI.WebControls.TextBox txtDV;
 
         /// <summary>
-        /// Control Req_RUN.
+        /// Control CustomVal_RUN_DV.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator Req_RUN;
-
-        /// <summary>
-        /// Control Req_DV.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.RequiredFieldValidator Req_DV;
+        protected global::System.Web.UI.WebControls.CustomValidator CustomVal_RUN_DV;
 
         /// <summary>
         /// Control lblCorreo.
@@ -168,6 +159,15 @@ namespace Meraki
         protected global::System.Web.UI.WebControls.TextBox txtCorreo;
 
         /// <summary>
+        /// Control Req_Correo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator Req_Correo;
+
+        /// <summary>
         /// Control Contraseña.
         /// </summary>
         /// <remarks>
@@ -186,39 +186,57 @@ namespace Meraki
         protected global::System.Web.UI.WebControls.TextBox txtContraseña;
 
         /// <summary>
-        /// Control ConfirmaContra.
+        /// Control Req_Contraseña.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label ConfirmaContra;
+        protected global::System.Web.UI.WebControls.RequiredFieldValidator Req_Contraseña;
 
         /// <summary>
-        /// Control txtConfirmaContra.
+        /// Control lblConfirmarContraseña.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtConfirmaContra;
+        protected global::System.Web.UI.WebControls.Label lblConfirmarContraseña;
 
         /// <summary>
-        /// Control Button1.
+        /// Control txtConfirmaContraseña.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Button Button1;
+        protected global::System.Web.UI.WebControls.TextBox txtConfirmaContraseña;
 
         /// <summary>
-        /// Control lblMensaje.
+        /// Control btnCrearCuenta.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMensaje;
+        protected global::System.Web.UI.WebControls.Button btnCrearCuenta;
+
+        /// <summary>
+        /// Control lblMensajeError2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMensajeError2;
+
+        /// <summary>
+        /// Control lblMensajeExito2.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblMensajeExito2;
     }
 }

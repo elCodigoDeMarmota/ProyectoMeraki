@@ -26,6 +26,46 @@
                     </Items>
                 </asp:Menu>
                 <style>
+                    .video_contenedor 
+                    {
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        overflow: hidden;
+                        z-index: -1;
+                    }
+
+                    .video_fondo 
+                    {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+
+                     body 
+                     {
+                         margin: 0;
+                         background-color: #ffffff;
+                         overflow-x: hidden;
+                     }
+
+                     .Contenido 
+                     {
+                         position: relative;
+                         z-index: 1; /* Asegura que el contenido esté por encima del video */
+                         background: white; /* Fondo blanco sólido */
+                         padding: 50px; /* Espaciado interno */
+                         border-radius: 10px; /* Bordes redondeados */
+                         max-width: 850px; /* Ancho máximo del contenedor */
+                         margin: 20px auto; /* Centra el contenedor horizontal y verticalmente */
+                         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra suave */
+     
+                     }
                     #Menu1 a {
                         color: white;
                         text-decoration: none;
@@ -81,6 +121,11 @@
                     }
                     
                 </style>
+                <div class="video_contenedor">
+    <video class="video_fondo" autoplay muted loop>
+    <source src="Fondo_Animado.mp4" type="video/mp4" />
+    </video>
+</div>
             </td>
 
             <td style="background-color: #079ea4; padding: 10px;">
@@ -109,8 +154,8 @@
                     </asp:Menu>
             </td>
             <td style="background-color: #1A1A1A; padding: 10px; text-align: right;">
-            <asp:Button ID="btnCrearCuenta" runat="server" Text="Crear cuenta" CssClass="boton" />
-            <asp:Button ID="btnIniciarSesion" runat="server" Text="Iniciar sesión" CssClass="boton" />
+            <asp:Button ID="btnCrearCuenta" runat="server" Text="Crear cuenta" CssClass="boton" CausesValidation="false" OnClick="btnCrearCuenta_Click" />
+                <asp:Button ID="btnIniciarSesion" runat="server" Text="Iniciar sesión" CssClass="boton" CausesValidation="false" OnClick="btnIniciarSesion_Click" />
     </td>
         </tr>
     </table>
