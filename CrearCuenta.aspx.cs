@@ -106,6 +106,9 @@ namespace Meraki
             lblMensajeExito2.Visible = true;
         }
 
+        protected void txtDV_TextChanged(object sender, EventArgs e)
+        {
 
+        }
     }
 }

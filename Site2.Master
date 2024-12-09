@@ -166,7 +166,7 @@
                     </Items>
                     </asp:Menu>
                 <asp:Label ID="lblUsuario" runat="server"  CssClass="NombreUsuario" ></asp:Label>
-                <asp:Button ID="btCerrarSesion" runat="server" Text="Cerrar Sesión" CssClass="boton" />
+<asp:Button ID="btCerrarSesion" runat="server" Text="Cerrar Sesión" CssClass="boton" OnClick="btCerrarSesion_Click" />
             </td>
                         <td style="background-color: #1A1A1A; padding: 10px;" colspan="2">
 
