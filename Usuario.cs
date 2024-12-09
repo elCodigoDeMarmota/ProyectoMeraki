@@ -7,6 +7,7 @@ using System.Data.Sql;
 using System.Web.Configuration;
 using System.Data.SqlClient;
 using System.Web.UI;
+using Meraki.Utils;
 
 namespace Meraki
 {
@@ -31,7 +32,36 @@ namespace Meraki
             }
         }
 
-        public void CrearCuenta(string Nombre, string Apellidos, DateTime Fecha_Nacimiento, int RUN, string DV, string Correo, string Contraseña)
+        public bool UsuarioExistente(int RUN, string DV)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(conexion))
+                {
+                    conn.Open();
+
+                    using (SqlCommand cmd = new SqlCommand("UsuarioExistente", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure; // Indica que es un procedimiento almacenado
+
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("@RUN", RUN);
+                        cmd.Parameters.AddWithValue("@DV", DV);
+
+                        // Ejecuta el procedimiento y obtiene el resultado
+                        int usuarioExistente = (int)cmd.ExecuteScalar();
+                        return usuarioExistente > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo del error
+                throw new Exception("Error al verificar si el usuario existe: " + ex.Message);
+            }
+        }
+
+        public void CrearCuenta(string Nombre, string Apellidos, DateTime Fecha_Nacimiento, int RUN, string DV, string Correo, string Contraseña, string salt)
         {
             try
             {
@@ -51,6 +81,7 @@ namespace Meraki
                         cmd.Parameters.AddWithValue("@DV", DV);
                         cmd.Parameters.AddWithValue("@Correo", Correo);
                         cmd.Parameters.AddWithValue("@Contraseña", Contraseña);
+                        cmd.Parameters.AddWithValue("@Salt", salt);
 
                         //se ejecuta el procedimiento
                         cmd.ExecuteNonQuery();
@@ -86,36 +117,6 @@ namespace Meraki
             return dv.ToUpper() == dvCalculado;
         }
 
-        public bool UsuarioExistente(int RUN, string DV)
-        {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(conexion))
-                {
-                    conn.Open();
-
-                    using (SqlCommand cmd = new SqlCommand("UsuarioExistente", conn))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure; // Indica que es un procedimiento almacenado
-
-                        // Parámetros del procedimiento almacenado
-                        cmd.Parameters.AddWithValue("@RUN", RUN);
-                        cmd.Parameters.AddWithValue("@DV", DV);
-
-                        // Ejecuta el procedimiento y obtiene el resultado
-                        int usuarioExistente = (int)cmd.ExecuteScalar();
-                        return usuarioExistente > 0;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Manejo del error
-                throw new Exception("Error al verificar si el usuario existe: " + ex.Message);
-            }
-        }
-
-
 
         public DataTable Autentificación(string USUARIO, string CONTRASEÑA)
         {
@@ -123,41 +124,43 @@ namespace Meraki
             DataTable dt = new DataTable();
             try
             {
-                #region Paso 1: Abrir Conecion
-                SqlConnection conn = new SqlConnection(conexion);
-                conn.Open(); // Abrir conexión
-                #endregion
-                #region Paso 2: Llamar al procedimiento
-                SqlCommand cmd = new SqlCommand("autentificacion", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                #endregion
-                #region Paso 3: Pasar parametros
-                cmd.Parameters.Add("@USUARIO", SqlDbType.VarChar, 60);
-                cmd.Parameters["@USUARIO"].Value = USUARIO;
+                using (SqlConnection conn = new SqlConnection(conexion))
+                {
+                    conn.Open();
+                    using (SqlCommand cmd = new SqlCommand("autentificacion", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@USUARIO", SqlDbType.VarChar, 60).Value = USUARIO;
 
-                cmd.Parameters.Add("@CONTRASEÑA", SqlDbType.VarChar, 60);
-                cmd.Parameters["@CONTRASEÑA"].Value = CONTRASEÑA;
-                #endregion
-                #region Paso 4: Ejecuto el prodecimiento
-                dr = cmd.ExecuteReader();
-                dt.Load(dr);
-                #endregion
+                        dr = cmd.ExecuteReader();
+                        dt.Load(dr);
 
-                #region cierro conexion y dr
-                dr.Close();
-                conn.Close();
-                #endregion
+                        if (dt.Rows.Count == 0)
+                        {
+                            // Usuario no encontrado
+                            return null;
+                        }
+
+                        string hashAlmacenado = dt.Rows[0]["USU_CONTRASEÑA"].ToString();
+                        string salt = dt.Rows[0]["USU_SALT"].ToString();
+
+                        // Generar hash ingresado
+                        string hashIngresado = Utils.Utils.GenerarHash(CONTRASEÑA, salt);
+
+                        if (hashIngresado != hashAlmacenado)
+                        {
+                            return null; 
+                        }
+                    }
+                }
                 return dt;
-
-
             }
             catch (Exception ex)
             {
-                // Manejo de errores
-                throw new Exception("Error al autenticar el usuario: " + ex.Message);
+                return null;
             }
-
         }
+
 
     }
 }

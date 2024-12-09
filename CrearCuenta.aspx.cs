@@ -74,7 +74,13 @@ namespace Meraki
                     return; 
                 }
 
-                usuario.CrearCuenta(Nombre, Apellidos, Fecha_Nacimiento, RUN, DV, Correo, Contraseña);
+                // Crear salt y hash
+                string salt = Utils.Utils.GenerarSalt();
+                string hash = Utils.Utils.GenerarHash(Contraseña, salt);
+
+                Contraseña = hash;
+
+                usuario.CrearCuenta(Nombre, Apellidos, Fecha_Nacimiento, RUN, DV, Correo, Contraseña, salt);
 
                 LimpiarFormulario();
 
