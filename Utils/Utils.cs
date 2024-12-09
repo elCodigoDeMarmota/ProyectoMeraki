@@ -38,5 +38,15 @@ namespace Meraki.Utils
             }
         }
 
+        // Método para verificar si la contraseña ingresada es válida
+        public static bool VerificarContraseña(string contraseñaIngresada, string salt, string hashAlmacenado)
+        {
+            // Generar el hash de la contraseña ingresada usando el mismo salt
+            string hashIngresado = GenerarHash(contraseñaIngresada, salt);
+
+            // Comparar el hash ingresado con el almacenado
+            return hashAlmacenado == hashIngresado;
+        }
+
     }
 }

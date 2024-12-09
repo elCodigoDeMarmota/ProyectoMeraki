@@ -15,6 +15,13 @@ namespace Meraki
     {
         string conexion = WebConfigurationManager.ConnectionStrings["LOCAL"].ConnectionString;
 
+        public int ID { get; set; } // Asume que tienes un ID único para el usuario
+        public string RUT { get; set; }
+        public string Nombre { get; set; }
+        public string Correo { get; set; }
+        public string Rol { get; set; }
+        public string EstadoCuenta { get; set; }
+
         public string ProbarConexion()
         {
             string Resultado = null;
@@ -147,20 +154,99 @@ namespace Meraki
                         // Generar hash ingresado
                         string hashIngresado = Utils.Utils.GenerarHash(CONTRASEÑA, salt);
 
-                        if (hashIngresado != hashAlmacenado)
-                        {
-                            return null; 
-                        }
-                    }
-                }
+        public DataTable Autentificación(string USUARIO, string CONTRASEÑA)
+        {
+            SqlDataReader dr = null;
+            DataTable dt = new DataTable();
+            try
+            {
+                #region Paso 1: Abrir Conecion
+                SqlConnection conn = new SqlConnection(conexion);
+                conn.Open(); // Abrir conexión
+                #endregion
+                #region Paso 2: Llamar al procedimiento
+                SqlCommand cmd = new SqlCommand("autentificacion", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                #endregion
+                #region Paso 3: Pasar parametros
+                cmd.Parameters.Add("@USUARIO", SqlDbType.VarChar, 60);
+                cmd.Parameters["@USUARIO"].Value = USUARIO;
+
+                cmd.Parameters.Add("@CONTRASEÑA", SqlDbType.VarChar, 60);
+                cmd.Parameters["@CONTRASEÑA"].Value = CONTRASEÑA;
+                #endregion
+                #region Paso 4: Ejecuto el prodecimiento
+                dr = cmd.ExecuteReader();
+                dt.Load(dr);
+                #endregion
+
+                #region cierro conexion y dr
+                dr.Close();
+                conn.Close();
+                #endregion
                 return dt;
+
+
             }
             catch (Exception ex)
             {
-                return null;
+                // Manejo de errores
+                throw new Exception("Error al autenticar el usuario: " + ex.Message);
             }
+
+        }
+
+        public DataTable CargarDatosUsuario(string idUsuario = null, string rut = null)
+        {
+            DataTable dt = new DataTable();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(conexion))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("BuscarUsuario", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    // Parámetros opcionales
+                    cmd.Parameters.AddWithValue("@ID_Usuario", string.IsNullOrEmpty(idUsuario) ? (object)DBNull.Value : idUsuario);
+                    cmd.Parameters.AddWithValue("@RUT", string.IsNullOrEmpty(rut) ? (object)DBNull.Value : rut);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al cargar los datos del usuario", ex);
+            }
+
+            return dt;
         }
 
 
+        public bool ActualizarUsuario(string nombre, string correo, string rol, string estadoCuenta, string ID_Usuario)
+        {
+            using (SqlConnection conn = new SqlConnection(conexion))
+            {
+                SqlCommand cmd = new SqlCommand("ActualizarUsuario", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                // Agregar parámetros
+                cmd.Parameters.AddWithValue("@Nombre", nombre);
+                cmd.Parameters.AddWithValue("@Correo", correo);
+                cmd.Parameters.AddWithValue("@RolID", rol);
+                cmd.Parameters.AddWithValue("@EstadoCuenta", estadoCuenta);
+                cmd.Parameters.AddWithValue("@ID_Usuario", ID_Usuario); // Identificador único
+
+                conn.Open();
+                int filasAfectadas = cmd.ExecuteNonQuery();
+                return filasAfectadas > 0; // Retorna true si se actualizó al menos una fila
+            }
+        }
+
+        internal bool ActualizarUsuario(string rut, string nombre, string correo, string rol, object iD_Usuario)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
