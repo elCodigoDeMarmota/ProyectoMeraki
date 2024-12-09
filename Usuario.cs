@@ -159,5 +159,75 @@ namespace Meraki
 
         }
 
+        public DataTable BuscarUsuarioPorRUT(string rut)
+        {
+            SqlDataReader dr = null;
+            DataTable dt = new DataTable();
+
+            try
+            {
+                #region Paso 1: Abrir Conecion
+                SqlConnection conn = new SqlConnection(conexion);
+                conn.Open(); // Abrir conexión
+                #endregion
+                #region Paso 2: Llamar al procedimiento
+                SqlCommand cmd = new SqlCommand("BuscarUsuario", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                #endregion
+                #region Paso 3: Pasar parametros
+                cmd.Parameters.Add("@RUT", SqlDbType.VarChar, 15);
+                cmd.Parameters["@RUT"].Value = rut;
+                #endregion
+                #region Paso 4: Ejecuto el prodecimiento
+                dr = cmd.ExecuteReader();
+                dt.Load(dr);
+                #endregion
+
+                #region cierro conexion y dr
+                dr.Close();
+                conn.Close();
+                #endregion
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al buscar el usuario por RUT", ex); ;
+            }
+        }
+
+        public DataTable ListarTodasLasCuentas()
+        {
+            SqlDataReader dr = null;
+            DataTable dt = new DataTable();
+
+            try
+            {
+                #region Paso 1: Abrir conexion
+                SqlConnection conn = new SqlConnection(conexion);
+                conn.Open();
+                #endregion
+
+                #region Paso 2: Llamar al procedimiento almacenado
+                SqlCommand cmd = new SqlCommand("ListarCuentas", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                #endregion
+
+                #region Paso 3: Ejecutar el procedimiento
+                dr = cmd.ExecuteReader();
+                dt.Load(dr);
+                #endregion
+
+                #region cierro conexion y dr
+                dr.Close();
+                conn.Close();
+                #endregion
+                return dt;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al listar todas las cuentas", ex);
+            }
+        }
+
     }
 }
