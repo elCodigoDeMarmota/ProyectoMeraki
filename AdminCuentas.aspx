@@ -52,7 +52,7 @@
             background: white; /* Fondo blanco sólido */
             padding: 0px; /* Espaciado interno */
             border-radius: 10px; /* Bordes redondeados */
-            max-width: 1250px; /* Ancho máximo del contenedor */
+            max-width: 1350px; /* Ancho máximo del contenedor */
             margin: 20px auto; /* Centra el contenedor horizontal y verticalmente */
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra suave */
         }
