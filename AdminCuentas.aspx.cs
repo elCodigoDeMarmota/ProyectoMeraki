@@ -12,6 +12,7 @@ namespace Meraki
     public partial class AdminCuentas : System.Web.UI.Page
     {
         private string ID_Usuario;
+        private string rolNombre;
 
         public object USUARIO { get; private set; }
             //public int ID { get; set; } // Asume que tienes un ID único para el usuario
@@ -167,7 +168,15 @@ namespace Meraki
 
         txtNombre.Text = row["Nombre_Usuario"].ToString();
         txtCorreo.Text = row["CorreoElectronico"].ToString();
-        ddlRol.SelectedValue = row["Rol"].ToString();
+        string rolId = row["Rol_ID"].ToString();
+        if (ddlRol.Items.FindByValue(rolId) != null)
+        {
+            ddlRol.SelectedValue = rolId;
+        }
+        else
+        {
+            ddlRol.SelectedIndex = 0; // Opción por defecto si no se encuentra el rol
+        }
         ddlEstadoCuenta.SelectedValue = row["EstadoCuenta"].ToString();
 
         ScriptManager.RegisterStartupScript(this, this.GetType(), "MostrarModal", "abrirModal();", true);

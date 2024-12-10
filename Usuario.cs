@@ -234,7 +234,7 @@ namespace Meraki
                 // Agregar parámetros
                 cmd.Parameters.AddWithValue("@Nombre", nombre);
                 cmd.Parameters.AddWithValue("@Correo", correo);
-                cmd.Parameters.AddWithValue("@RolID", rol);
+                cmd.Parameters.AddWithValue("@RolNombre", rol);
                 cmd.Parameters.AddWithValue("@EstadoCuenta", estadoCuenta);
                 cmd.Parameters.AddWithValue("@ID_Usuario", ID_Usuario); // Identificador único
 
