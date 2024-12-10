@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Meraki.Utils;
 
 namespace Meraki
 {
@@ -73,8 +76,20 @@ namespace Meraki
 
                     return; 
                 }
+                // Crear salt y hash
+                string salt = Utils.Utils.GenerarSalt();
+                string hash = Utils.Utils.GenerarHash(Contraseña, salt);
 
-                usuario.CrearCuenta(Nombre, Apellidos, Fecha_Nacimiento, RUN, DV, Correo, Contraseña);
+                Contraseña = hash;
+
+
+                // Crear salt y hash
+                string salt = Utils.Utils.GenerarSalt();
+                string hash = Utils.Utils.GenerarHash(Contraseña, salt);
+
+                Contraseña = hash;
+
+                usuario.CrearCuenta(Nombre, Apellidos, Fecha_Nacimiento, RUN, DV, Correo, Contraseña, salt);
 
                 LimpiarFormulario();
 

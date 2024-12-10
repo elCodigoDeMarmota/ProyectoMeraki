@@ -212,4 +212,8 @@
     <asp:Label ID="lblMensajeExito2" runat="server"  CssClass="mensajeExito" Visible="false"></asp:Label>
     <asp:Label ID="lblMensajeError2" runat="server" CssClass="mensajeError"  Visible="false"></asp:Label>
 </div>
+<div class="MensajeResultado">
+    <asp:Label ID="Label1" runat="server" CssClass="mensajeExito" Visible="false"></asp:Label>
+    <asp:Label ID="Label2" runat="server" CssClass="mensajeError" Visible="false"></asp:Label>
+</div>
 </asp:Content>

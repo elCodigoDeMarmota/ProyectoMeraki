@@ -7,12 +7,20 @@ using System.Data.Sql;
 using System.Web.Configuration;
 using System.Data.SqlClient;
 using System.Web.UI;
+using Meraki.Utils;
 
 namespace Meraki
 {
     public class Usuario
     {
         string conexion = WebConfigurationManager.ConnectionStrings["LOCAL"].ConnectionString;
+
+        public int ID { get; set; } // Asume que tienes un ID único para el usuario
+        public string RUT { get; set; }
+        public string Nombre { get; set; }
+        public string Correo { get; set; }
+        public string Rol { get; set; }
+        public string EstadoCuenta { get; set; }
 
         public string ProbarConexion()
         {
@@ -31,7 +39,36 @@ namespace Meraki
             }
         }
 
-        public void CrearCuenta(string Nombre, string Apellidos, DateTime Fecha_Nacimiento, int RUN, string DV, string Correo, string Contraseña)
+        public bool UsuarioExistente(int RUN, string DV)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(conexion))
+                {
+                    conn.Open();
+
+                    using (SqlCommand cmd = new SqlCommand("UsuarioExistente", conn))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure; // Indica que es un procedimiento almacenado
+
+                        // Parámetros del procedimiento almacenado
+                        cmd.Parameters.AddWithValue("@RUN", RUN);
+                        cmd.Parameters.AddWithValue("@DV", DV);
+
+                        // Ejecuta el procedimiento y obtiene el resultado
+                        int usuarioExistente = (int)cmd.ExecuteScalar();
+                        return usuarioExistente > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo del error
+                throw new Exception("Error al verificar si el usuario existe: " + ex.Message);
+            }
+        }
+
+        public void CrearCuenta(string Nombre, string Apellidos, DateTime Fecha_Nacimiento, int RUN, string DV, string Correo, string Contraseña, string salt)
         {
             try
             {
@@ -51,6 +88,7 @@ namespace Meraki
                         cmd.Parameters.AddWithValue("@DV", DV);
                         cmd.Parameters.AddWithValue("@Correo", Correo);
                         cmd.Parameters.AddWithValue("@Contraseña", Contraseña);
+                        cmd.Parameters.AddWithValue("@Salt", salt);
 
                         //se ejecuta el procedimiento
                         cmd.ExecuteNonQuery();
@@ -86,36 +124,35 @@ namespace Meraki
             return dv.ToUpper() == dvCalculado;
         }
 
-        public bool UsuarioExistente(int RUN, string DV)
+
+        public DataTable Autentificación(string USUARIO, string CONTRASEÑA)
         {
+            SqlDataReader dr = null;
+            DataTable dt = new DataTable();
             try
             {
                 using (SqlConnection conn = new SqlConnection(conexion))
                 {
                     conn.Open();
-
-                    using (SqlCommand cmd = new SqlCommand("UsuarioExistente", conn))
+                    using (SqlCommand cmd = new SqlCommand("autentificacion", conn))
                     {
-                        cmd.CommandType = CommandType.StoredProcedure; // Indica que es un procedimiento almacenado
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("@USUARIO", SqlDbType.VarChar, 60).Value = USUARIO;
 
-                        // Parámetros del procedimiento almacenado
-                        cmd.Parameters.AddWithValue("@RUN", RUN);
-                        cmd.Parameters.AddWithValue("@DV", DV);
+                        dr = cmd.ExecuteReader();
+                        dt.Load(dr);
 
-                        // Ejecuta el procedimiento y obtiene el resultado
-                        int usuarioExistente = (int)cmd.ExecuteScalar();
-                        return usuarioExistente > 0;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Manejo del error
-                throw new Exception("Error al verificar si el usuario existe: " + ex.Message);
-            }
-        }
+                        if (dt.Rows.Count == 0)
+                        {
+                            // Usuario no encontrado
+                            return null;
+                        }
 
+                        string hashAlmacenado = dt.Rows[0]["USU_CONTRASEÑA"].ToString();
+                        string salt = dt.Rows[0]["USU_SALT"].ToString();
 
+                        // Generar hash ingresado
+                        string hashIngresado = Utils.Utils.GenerarHash(CONTRASEÑA, salt);
 
         public DataTable Autentificación(string USUARIO, string CONTRASEÑA)
         {
@@ -159,75 +196,57 @@ namespace Meraki
 
         }
 
-        public DataTable BuscarUsuarioPorRUT(string rut)
+        public DataTable CargarDatosUsuario(string idUsuario = null, string rut = null)
         {
-            SqlDataReader dr = null;
             DataTable dt = new DataTable();
-
             try
             {
-                #region Paso 1: Abrir Conecion
-                SqlConnection conn = new SqlConnection(conexion);
-                conn.Open(); // Abrir conexión
-                #endregion
-                #region Paso 2: Llamar al procedimiento
-                SqlCommand cmd = new SqlCommand("BuscarUsuario", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                #endregion
-                #region Paso 3: Pasar parametros
-                cmd.Parameters.Add("@RUT", SqlDbType.VarChar, 15);
-                cmd.Parameters["@RUT"].Value = rut;
-                #endregion
-                #region Paso 4: Ejecuto el prodecimiento
-                dr = cmd.ExecuteReader();
-                dt.Load(dr);
-                #endregion
+                using (SqlConnection conn = new SqlConnection(conexion))
+                {
+                    conn.Open();
+                    SqlCommand cmd = new SqlCommand("BuscarUsuario", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
 
-                #region cierro conexion y dr
-                dr.Close();
-                conn.Close();
-                #endregion
-                return dt;
+                    // Parámetros opcionales
+                    cmd.Parameters.AddWithValue("@ID_Usuario", string.IsNullOrEmpty(idUsuario) ? (object)DBNull.Value : idUsuario);
+                    cmd.Parameters.AddWithValue("@RUT", string.IsNullOrEmpty(rut) ? (object)DBNull.Value : rut);
+
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+                }
             }
             catch (Exception ex)
             {
-                throw new Exception("Error al buscar el usuario por RUT", ex); ;
+                throw new Exception("Error al cargar los datos del usuario", ex);
             }
+
+            return dt;
         }
 
-        public DataTable ListarTodasLasCuentas()
-        {
-            SqlDataReader dr = null;
-            DataTable dt = new DataTable();
 
-            try
+        public bool ActualizarUsuario(string nombre, string correo, string rol, string estadoCuenta, string ID_Usuario)
+        {
+            using (SqlConnection conn = new SqlConnection(conexion))
             {
-                #region Paso 1: Abrir conexion
-                SqlConnection conn = new SqlConnection(conexion);
+                SqlCommand cmd = new SqlCommand("ActualizarUsuario", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                // Agregar parámetros
+                cmd.Parameters.AddWithValue("@Nombre", nombre);
+                cmd.Parameters.AddWithValue("@Correo", correo);
+                cmd.Parameters.AddWithValue("@RolID", rol);
+                cmd.Parameters.AddWithValue("@EstadoCuenta", estadoCuenta);
+                cmd.Parameters.AddWithValue("@ID_Usuario", ID_Usuario); // Identificador único
+
                 conn.Open();
-                #endregion
-
-                #region Paso 2: Llamar al procedimiento almacenado
-                SqlCommand cmd = new SqlCommand("ListarCuentas", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                #endregion
-
-                #region Paso 3: Ejecutar el procedimiento
-                dr = cmd.ExecuteReader();
-                dt.Load(dr);
-                #endregion
-
-                #region cierro conexion y dr
-                dr.Close();
-                conn.Close();
-                #endregion
-                return dt;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Error al listar todas las cuentas", ex);
+                int filasAfectadas = cmd.ExecuteNonQuery();
+                return filasAfectadas > 0; // Retorna true si se actualizó al menos una fila
             }
         }
 
+        internal bool ActualizarUsuario(string rut, string nombre, string correo, string rol, object iD_Usuario)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

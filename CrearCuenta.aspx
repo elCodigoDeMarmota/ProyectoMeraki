@@ -264,7 +264,7 @@
 
     <div class="camposCrear">
         <asp:Label ID="lblFechaNacimiento" runat="server" Text="Fecha de nacimiento:" CssClass="labelCrear"></asp:Label>
-        <asp:TextBox ID="txtFechaNacimiento" runat="server" CssClass="textboxCrear"></asp:TextBox>
+        <asp:TextBox ID="txtFechaNacimiento" runat="server" CssClass="textboxCrear" TextMode="Date"></asp:TextBox>
         <asp:RequiredFieldValidator
          ID="Req_Fecha_Nacimiento" 
          runat="server" CssClass="mensajeError"

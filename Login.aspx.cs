@@ -5,6 +5,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using Meraki.Utils;
 
 namespace Meraki
 {
@@ -17,50 +18,50 @@ namespace Meraki
 
         protected void btnIniciarSesion_Click(object sender, EventArgs e)
         {
-            Usuario usuario = new Usuario();
+            string usuarioInput = txtUsuario.Text.Trim();
+            string contraseñaInput = txtContraseña.Text.Trim();
 
-       
-            string USUARIO = txtUsuario.Text.Trim();
-            string CONTRASEÑA = txtContraseña.Text.Trim();
-
-
-
-            DataTable resultado = usuario.Autentificación(USUARIO, CONTRASEÑA);
-
-            if (resultado.Rows.Count > 0)
+            if (string.IsNullOrEmpty(usuarioInput) || string.IsNullOrEmpty(contraseñaInput))
             {
-                string nombreCompleto = resultado.Rows[0]["USU_NOMBRE"].ToString() + " " + resultado.Rows[0]["USU_APELLIDOS"].ToString();
-                Session["UsuarioNombre"] = nombreCompleto;
-
-
-                lblMensajeExito2.Text = "Inicio de sesión exitoso.";
-                lblMensajeExito2.CssClass = "mensajeExito";
-                lblMensajeExito2.Style["visibility"] = "visible"; 
-                lblMensajeExito2.Style["display"] = "block";
-                lblMensajeExito2.Visible = true;
-
-                Response.Redirect("PanelControl_Jefatura.aspx");
+                lblMensajeError2.Text = "Debe ingresar usuario y contraseña.";
+                lblMensajeError2.CssClass = "mensajeError";
+                lblMensajeError2.Style["visibility"] = "visible";
+                lblMensajeError2.Visible = true;
                 return;
             }
 
-            else
+            try
             {
-                lblMensajeError2.Text = "Usuario o contraseña incorrectos.";
-                lblMensajeError2.CssClass = "mensajeError";
-                lblMensajeError2 .Visible = true;
-             
-                lblMensajeError2.Style["visibility"] = "visible"; 
-                lblMensajeError2.Style["display"] = "block"; 
-              
+                Usuario usuario = new Usuario();
+                var resultado = usuario.Autentificación(usuarioInput, contraseñaInput);
+
+                if (resultado != null)
+                {
+                    // Login exitoso
+                    string nombreCompleto = $"{resultado.Rows[0]["USU_NOMBRE"]} {resultado.Rows[0]["USU_APELLIDOS"]}";
+                    Session["UsuarioNombre"] = nombreCompleto;
+                    Response.Redirect("PanelControl_Jefatura.aspx");
+                }
+                else
+                {
+                    // Usuario o contraseña incorrectos
+                    lblMensajeError2.Text = "Usuario o contraseña incorrectos.";
+                    lblMensajeError2.CssClass = "mensajeError";
+                    lblMensajeError2.Style["visibility"] = "visible";
+                    lblMensajeError2.Visible = true;
+
+
+                }
             }
-
-
+            catch (Exception ex)
+            {
+                lblMensajeError2.Text = "Ocurrió un error inesperado. Intente más tarde.";
+                lblMensajeError2.CssClass = "mensajeError";
+                lblMensajeError2.Style["visibility"] = "visible";
+                lblMensajeError2.Visible = true;
+                // Log.Error("Error al iniciar sesión: ", ex); // Registrar el error
+            }
         }
 
     }
-
-        //protected void btnIniciarSesion_Click(object sender, EventArgs e)
-        //{
-        //    Response.Redirect("~/Login.aspx");
-        //}
 }
