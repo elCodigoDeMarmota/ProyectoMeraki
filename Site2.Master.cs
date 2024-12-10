@@ -20,5 +20,15 @@ namespace Meraki
                 Response.Redirect("Login.aspx");
             }
         }
+
+        protected void btCerrarSesion_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            Session.Abandon();
+
+            Response.Redirect("Login.aspx"); 
+        }
+
+
     }
 }

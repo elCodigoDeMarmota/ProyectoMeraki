@@ -123,6 +123,7 @@
     <Compile Include="Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Paciente.cs" />
     <Compile Include="PanelControl_Jefatura.aspx.cs">
       <DependentUpon>PanelControl_Jefatura.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

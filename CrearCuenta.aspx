@@ -276,7 +276,7 @@
     <asp:Label ID="lblRUN" runat="server" Text="RUN:" CssClass="labelCrear"></asp:Label>
     <asp:TextBox ID="txtRUN" runat="server" CssClass="textboxRUN"></asp:TextBox>
     <asp:Label ID="lblGuion" runat="server" Text="-"></asp:Label>
-    <asp:TextBox ID="txtDV" runat="server" CssClass="textboxDV" MaxLength="1"></asp:TextBox>
+    <asp:TextBox ID="txtDV" runat="server" CssClass="textboxDV" MaxLength="1" OnTextChanged="txtDV_TextChanged"></asp:TextBox>
 
     <!-- CustomValidator para validar ambos campos -->
     <asp:CustomValidator
